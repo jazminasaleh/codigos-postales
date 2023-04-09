@@ -15,6 +15,7 @@ def prueba(codigo):
     objeto = AnalizadorLexico();
     resultado = objeto.analizar(codigo)
     
+    #tokenizacion
     print('___RESULTADO___\n')
     print(resultado)
     

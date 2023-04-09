@@ -6,8 +6,7 @@ class AnalizadorLexico:
         self.letras = "^[a-zA-Z][^\\u00C0-\\u017F]*$"
         self.numeros = "^[0-9]+$"
         self.separadores = "^[ -]+$"
-        self.espacio = "^[ _]+$"
-    
+      
     def analizar(self, codigoPostal):
         er = r"(^[a-zA-Z0-9-]+$)"
         filtrar = []
@@ -26,10 +25,7 @@ class AnalizadorLexico:
                 tokens.append({f'{i}':'numero'})
             elif re.match(self.separadores,i):
                 tokens.append({f'{i}':'separador'})
-            elif re.match(self.espacio,i):
-                tokens.append({f'{i}':'espacio'})
             else:
                 tokens.append({f'{i}':'invalido'})
-
         return tokens
 
