@@ -5,7 +5,7 @@ import json, re
 from logica.analizador_lexico import AnalizadorLexico
 #depenidndo del codigo se dirge a X pantalla
 def prueba(codigo):
-    codigo = codigo.strip().replace(" ", "%20")
+   
     #consumo de la api
     print('___CONSUMO API___\n')
     print(infoapi(codigo))

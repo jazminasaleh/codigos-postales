@@ -2,6 +2,7 @@
 from flask import Flask, render_template, request
 from logica.logica import prueba
 
+#Unir la parte de la interfaz con la logica
 app = Flask(__name__)
 @app.route('/')
 def home():
