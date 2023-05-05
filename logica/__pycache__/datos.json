@@ -572,7 +572,7 @@
             "letras": false,
             "guiones": true,
             "espacios": false,
-            "expresionRegular": "^(0[1-7]|[1-9][0-9])\\d-\\d{4}$",
+            "expresionRegular": "^(0[1-8]|1[0-8]|2[1-9]|[3-5][0-9]|6[1-3])\\d{3}$",
             "analisisSemantico": "El primer dígito representa la provincia {adminName1}, mientras que los dos siguientes indican la ciudad {adminName2} y los dos últimos especifican el área {placeName}.",
             "usar": ["adminName1","adminName2","placeName"]
         }
