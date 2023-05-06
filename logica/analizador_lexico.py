@@ -18,6 +18,29 @@ class AnalizadorLexico:
         return cadena
     
     #Tokenizacion, de acuerdo si es letra, numero espacio o guion
+    def analizar(self, codigoPostal):
+        er = r"(^[a-zA-Z0-9-]+$)"
+        filtrar = []
+        for i in range(len(codigoPostal)):
+            if re.findall(er, codigoPostal[i]):
+                filtrar.append(codigoPostal[i])
+            else:
+                print("La entrada %s no es valida y será retirada" % codigoPostal[i])
+        
+        tokens =[]
+        
+        for i in filtrar:
+            if re.match(self.letras,i):
+                tokens.append({f'{i}':'letra'})
+            elif re.match(self.numeros,i):
+                tokens.append({f'{i}':'numero'})
+            elif re.match(self.separadores,i):
+                tokens.append({f'{i}':'separador'})
+            else:
+                tokens.append({f'{i}':'invalido'})
+        return tokens
+    
+    
     def analisisLexico(self, codigoPostal):
         er = r"(^[a-zA-Z0-9-\s]+$)"
         filtrar = []
@@ -30,13 +53,13 @@ class AnalizadorLexico:
         tokens =[]
         for i in filtrar:
             if re.match(self.letras,i):
-                tokens.append({f'{i}':'letra'})
+                tokens.append({"letra": True})
             elif re.match(self.numeros,i):
-                tokens.append({f'{i}':'numero'})
+                tokens.append({"numero":True})
             elif re.match(self.guion,i):
-                tokens.append({f'{i}':'guion'})
+                tokens.append({"guion":True})
             elif re.match(self.espacio,i):
-                tokens.append({f'{i}':'espacio'})
-            else:
-                tokens.append({f'{i}':'invalido'})
+                tokens.append({"espacio":True})
         return tokens
+    
+        

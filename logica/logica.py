@@ -1,21 +1,41 @@
 from flask import redirect, render_template
 from urllib.request import urlopen
 import json, re
-
 from logica.analizador_lexico import AnalizadorLexico
+from model.expresionData import Expresion_Data
+
+f = open("./static/data/datos.json")
+jsonData = json.load(f)
+
+postalCodes = []
+
+objeto = AnalizadorLexico();
+for i in jsonData["data"]:
+    postalCodes.append(Expresion_Data(i["pais"],i["expresionRegular"],i["numeros"], i["letras"], i["guiones"], i["espacios"]))
+  
+# Closing file
+f.close()
+
+def validateExpresion(analisisLexico):
+    print(analisisLexico)
+    
+
 #depenidndo del codigo se dirge a X pantalla
 def prueba(codigo):
     
     #Codigo sin carcateres
     print('___codigo sin carcteres epseciales___\n')
-    objeto = AnalizadorLexico();
     resultado = objeto.codigoSinCarcateres(codigo)
     print(resultado)
+    
+    
     
      #analizador lexico
     print('Analizador lexico\n')
     analisisLexico = objeto.analisisLexico(codigo)
     print(analisisLexico)
+    
+    validateExpresion(analisisLexico)
    
     
      #consumo de la api
