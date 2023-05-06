@@ -2,6 +2,7 @@ from flask import redirect, render_template
 from urllib.request import urlopen
 import json, re
 from logica.analizador_lexico import AnalizadorLexico
+from model.code import Code
 from model.expresionData import Expresion_Data
 
 f = open("./static/data/datos.json")
@@ -11,17 +12,69 @@ postalCodes = []
 
 objeto = AnalizadorLexico();
 for i in jsonData["data"]:
-    postalCodes.append(Expresion_Data(i["pais"],i["expresionRegular"],i["numeros"], i["letras"], i["guiones"], i["espacios"]))
+    postalCodes.append(Expresion_Data(i["abreviatura"],i["pais"],i["expresionRegular"],i["numeros"], i["letras"], i["guiones"], i["espacios"], i["numeroCaracteres"], i["analisisSemantico"], i["usar"]))
   
 # Closing file
 f.close()
 
-def validateExpresion(analisisLexico):
-    print(analisisLexico)
+
+def checkCondition(code: Expresion_Data, data, codigo):
+    coincidences = 0
+    for i in code.caracteres:
+        if i == len(codigo):
+            coincidences += 1
+            
+    if coincidences == 0:
+        return False
     
+    for i in data:
+        if i == "numero":
+            if code.numeros:
+                return True
+        if i == "letra":
+            if code.letras:
+                return True
+        if i == "guion":
+            if code.guiones:
+                return True
+        if i == "espacio":
+            if code.espacios:
+                return True
+    return False
+
+    
+def validateExpresion(analisisLexico, codigo):
+    temp_caracteres = []
+    
+    for i in analisisLexico:
+        temp_caracteres.append(list(i)[0])
+
+    data = list(set(temp_caracteres))
+    
+    codigos_postales = filter(lambda code: checkCondition(code, data, codigo), postalCodes)
+    
+    formatos_validos = []
+    
+    for i in codigos_postales:
+        regex = r""+i.expression
+        match = re.match(regex, codigo)
+        
+        if match:
+            formatos_validos.append(i)
+    
+    return formatos_validos
+
+
+def checkItemInList(item: Code, list):
+    if len(list) == 0: 
+        return False
+    for i in list:
+        if item.place_name == i.place_name and item.country_code == i.country_code:
+            return True
+    return False
 
 #depenidndo del codigo se dirge a X pantalla
-def prueba(codigo):
+def getCodes(codigo):
     
     #Codigo sin carcateres
     print('___codigo sin carcteres epseciales___\n')
@@ -35,28 +88,41 @@ def prueba(codigo):
     analisisLexico = objeto.analisisLexico(codigo)
     print(analisisLexico)
     
-    validateExpresion(analisisLexico)
+    formatos_validos = validateExpresion(analisisLexico, codigo)
    
     
      #consumo de la api
     print('___CONSUMO API___\n')
     print(infoapi(resultado))
     
-    #tokenizacion
-    print('___RESULTADO___\n')
-   
-    
-    #cadena con tokens
-    for i in analisisLexico:
-        print(i)
         
-    #valores
-    print('\n___KEYS___\n')
-    for i in analisisLexico:
-        print(list(i.keys()))
-   
-    #Analisis estructural
-    print('\n___ANALISI ESTRUCTURAL___\n')
+    
+    
+    result = infoapi(resultado)
+    
+    table_list = []
+    
+    for i in result:
+        if not checkItemInList(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode")), table_list):
+            table_list.append(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode")))
+
+    #Dirigir a X pagina segun el codigo postal, si este es valido o no
+    if result != '': 
+        return render_template("result.html", codigos=formatos_validos, resultado = table_list, code = codigo)
+    else:
+        return render_template('error.html')
+
+def get_data_json(country):
+    print(country)
+    for i in postalCodes:
+        if i.code == country:
+            return i
+
+def getDescription(codigo, place, country):
+    data = infoapiExtraParameters(codigo, place, country)
+    
+    analisisLexico = objeto.analizar(codigo)
+    
     estructura = ''
     contador = 0
     contLetras =0
@@ -130,14 +196,22 @@ def prueba(codigo):
                     estructura += ' seguido de '+ str(contNumeros) +' números,'
                     contNumeros = 0
         contador += 1
-    print(estructura)
     
-    #Dirigir a X pagina segun el codigo postal, si este es valido o no
-    if infoapi(resultado) != '': 
-        return redirect(f"https://www.google.com/maps/place/{resultado}/")
-    else:
-        return render_template('error.html')
+    json_data = get_data_json(country)
     
+    
+    for i in json_data.usar:
+        json_data.semantico = json_data.semantico.replace("{"+i+"}", data[i])
+    
+    datosLexico = []
+    contador2 = 1
+    
+    for i in analisisLexico:
+        datosLexico.append("Posición "+ str(contador2) +": Digito " + list(i.keys())[0] + ", Tipo " + list(i.values())[0])
+        contador2 += 1
+    
+    
+    return render_template("description.html", lexico = datosLexico, estructura = estructura, semantico = json_data.semantico)
     
     
 #consumir la api de los coidgos postales a nivel mundial
@@ -148,5 +222,16 @@ def infoapi(codigo):
     data = json.loads(respuesta.read())
     dataa = data["postalCodes"]
     if(len(dataa) >= 1):
-        return dataa[0]['placeName'] 
+        return dataa
+    return ''
+
+
+def infoapiExtraParameters(codigo, place, country):
+    codigo = codigo.strip().replace(" ", "%20")
+    url = f'http://api.geonames.org/postalCodeSearchJSON?postalcode={codigo}&countrycode={country}&placename={place}&username=sebastiancorrea13'
+    respuesta = urlopen(url)
+    data = json.loads(respuesta.read())
+    dataa = data["postalCodes"]
+    if(len(dataa) >= 1):
+        return dataa[0]
     return ''

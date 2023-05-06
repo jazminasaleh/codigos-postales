@@ -476,7 +476,7 @@
             "letras": false,
             "guiones": false,
             "espacios": false,
-            "expresionRegular": "^(1[0-2]|[2-9][0-9])\\d{2}&",
+            "expresionRegular": "^(1[0-2]|[1-9][0-9])\\d{2}$",
             "analisisSemantico": " Los dos primeros dígitos indican la región postal {adminName1}, mientras que los dos últimos dígitos representan la zona postal específica {placeName}",
             "usar": ["adminName1","placeName"]
         },
