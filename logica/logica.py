@@ -1,11 +1,12 @@
 from flask import redirect, render_template
 from urllib.request import urlopen
+from urllib.parse import quote  
 import json, re
 from logica.analizador_lexico import AnalizadorLexico
 from model.code import Code
 from model.expresionData import Expresion_Data
 
-f = open("./static/data/datos.json")
+f = open("./static/data/datos.json", mode="r", encoding="utf-8")
 jsonData = json.load(f)
 
 postalCodes = []
@@ -79,7 +80,7 @@ def getCodes(codigo):
     #Codigo sin carcateres
     print('___codigo sin carcteres epseciales___\n')
     resultado = objeto.codigoSinCarcateres(codigo)
-    print(resultado)
+    codigo = resultado
     
     
     
@@ -103,17 +104,21 @@ def getCodes(codigo):
     table_list = []
     
     for i in result:
+        if codigo != i.get("postalCode"):
+            continue
+        
         if not checkItemInList(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode")), table_list):
             table_list.append(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode")))
 
     #Dirigir a X pagina segun el codigo postal, si este es valido o no
-    if result != '': 
+    print(len(table_list))
+    
+    if result != '' and len(table_list) != 0: 
         return render_template("result.html", codigos=formatos_validos, resultado = table_list, code = codigo)
     else:
-        return render_template('error.html')
+        return render_template('error.html', codigo = codigo)
 
 def get_data_json(country):
-    print(country)
     for i in postalCodes:
         if i.code == country:
             return i
@@ -211,7 +216,7 @@ def getDescription(codigo, place, country):
         contador2 += 1
     
     
-    return render_template("description.html", lexico = datosLexico, estructura = estructura, semantico = json_data.semantico)
+    return render_template("description.html", lexico = datosLexico, estructura = estructura, semantico = json_data.semantico, code = codigo, pais = json_data.pais)
     
     
 #consumir la api de los coidgos postales a nivel mundial
@@ -228,7 +233,11 @@ def infoapi(codigo):
 
 def infoapiExtraParameters(codigo, place, country):
     codigo = codigo.strip().replace(" ", "%20")
+    place = place.strip().replace(" ", "%20")
+    country = country.strip().replace(" ", "%20")
     url = f'http://api.geonames.org/postalCodeSearchJSON?postalcode={codigo}&countrycode={country}&placename={place}&username=sebastiancorrea13'
+    
+    print(url)
     respuesta = urlopen(url)
     data = json.loads(respuesta.read())
     dataa = data["postalCodes"]

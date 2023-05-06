@@ -357,7 +357,7 @@
             "guiones": false,
             "espacios": true,
             "expresionRegular": "^(0[1-9]|[1-8][0-9]|9[0-5]|98)\\d{3}(\\sCEDEX\\s(\\d{1}|\\d{2})|\\sCEDEX|\\sSP\\s07|\\sCITYSSIMO|\\sAIR)?$",
-            "analisisSemantico": "El primer dígito indica la región postal {adminName1}, los dos dígitos siguientes identifican el departamento {adminName2}, los dos últimos dígitos indican la ciudad o el área de entrega {placeName}.",
+            "analisisSemantico": "El primer dígito indica la región postal {adminName1}, los dos dígitos siguientes identifican el departamento {adminName2}, los dos últimos dígitos indican la ciudad o el área de entrega {placeName}, si el codigo cuenta con CEDEX se utiliza para identificar las direcciones de correo para empresas y organizaciones que tienen un alto volumen de correo y requieren una entrega especializada. Estas direcciones de correo pueden estar ubicadas en un edificio con múltiples oficinas o en una instalación de gran tamaño, como un hospital, un campus universitario o un centro comercial.",
             "usar": ["adminName1","adminName2","placeName"]
         },
         {
@@ -381,7 +381,7 @@
             "guiones": false,
             "espacios": true,
             "expresionRegular": "^973(00|0[5-9]|[1-3][0-9]|4[0-7]|5[0-7]|60|7[0-9]|8[0-4]|8[7-9]|9[0-4]|99)(\\sCEDEX\\s2|\\sCEDEX)?$",
-            "analisisSemantico": "Todo el código representa el lugar específico {adminName2},{adminName3},{placeName}",
+            "analisisSemantico": "Todo el código representa el lugar específico {adminName2},{adminName3},{placeName, si el codigo cuenta con CEDEX se utiliza para identificar las direcciones de correo para empresas y organizaciones que tienen un alto volumen de correo y requieren una entrega especializada. Estas direcciones de correo pueden estar ubicadas en un edificio con múltiples oficinas o en una instalación de gran tamaño, como un hospital, un campus universitario o un centro comercial.",
             "usar": ["adminName2","adminName3","placeName"]
         },
         {
@@ -417,7 +417,7 @@
             "guiones": false,
             "espacios": true,
             "expresionRegular": "^(970(0[1-9]|1[0-1]|19|23|29|82|8[4-6])|971([0-1][0-9]|2[0-3]|2[5-9]|3[0-1]|34|3[6-7]|39|4[0-2]|5[1-9]|[6-9][0-9]))(\\sCEDEX)?$",
-            "analisisSemantico": "Todo el código representa el lugar específico {adminName1},{adminName3},{placeName}",
+            "analisisSemantico": "Todo el código representa el lugar específico {adminName1},{adminName3},{placeName, si el codigo cuenta con CEDEX se utiliza para identificar las direcciones de correo para empresas y organizaciones que tienen un alto volumen de correo y requieren una entrega especializada. Estas direcciones de correo pueden estar ubicadas en un edificio con múltiples oficinas o en una instalación de gran tamaño, como un hospital, un campus universitario o un centro comercial.",
             "usar": ["adminName1","adminName3","placeName"]
         },
         {
@@ -717,7 +717,7 @@
             "guiones": false,
             "espacios": true,
             "expresionRegular": "^(972[0-8][0-9]|97290)|(9720[1-9]\\sCEDEX)|(972[1-9][1-9]\\sCEDEX)$",
-            "analisisSemantico": "El primer dígito representa el departamento, que en el caso de Martinica es 9, los dos dígitos siguientes se refieren a la región geográfica dentro de Martinica {adminName1}, y los dos últimos dígitos se utilizan para identificar una zona postal específica dentro de esa región {placeName}.",
+            "analisisSemantico": "El primer dígito representa el departamento, que en el caso de Martinica es 9, los dos dígitos siguientes se refieren a la región geográfica dentro de Martinica {adminName1}, y los dos últimos dígitos se utilizan para identificar una zona postal específica dentro de esa región {placeName}, si el codigo cuenta con CEDEX se utiliza para identificar las direcciones de correo para empresas y organizaciones que tienen un alto volumen de correo y requieren una entrega especializada. Estas direcciones de correo pueden estar ubicadas en un edificio con múltiples oficinas o en una instalación de gran tamaño, como un hospital, un campus universitario o un centro comercial.",
             "usar": ["adminName1","placeName"]
         },
         {
@@ -920,8 +920,8 @@
             "letras": true,
             "guiones": false,
             "espacios": true,
-            "expresionRegular": "^(97([4-9][0-3][0-9]|4[0-9]0))|(97([0-8][0-9][0-9]\\sCEDAX))|(97([0-8][0-9][0-9]\\sCEDAX\\s9))$",
-            "analisisSemantico": "Los dos primeros dígitos representan el departamento {adminName1}, mientras que los tres siguientes se refieren a la ubicación específica dentro de ese departamento {placeName}.",
+            "expresionRegular": "^(97([4-9][0-3][0-9]|4[0-9]0))|(97([0-8][0-9][0-9]\\sCEDEX))|(97([0-8][0-9][0-9]\\sCEDEX\\s9))$",
+            "analisisSemantico": "Los dos primeros dígitos representan el departamento {adminName1}, mientras que los tres siguientes se refieren a la ubicación específica dentro de ese departamento {placeName}, si el codigo cuenta con CEDEX se utiliza para identificar las direcciones de correo para empresas y organizaciones que tienen un alto volumen de correo y requieren una entrega especializada. Estas direcciones de correo pueden estar ubicadas en un edificio con múltiples oficinas o en una instalación de gran tamaño, como un hospital, un campus universitario o un centro comercial.",
             "usar": ["adminName1","placeName"]
         },
         {
