@@ -70,7 +70,7 @@ def checkItemInList(item: Code, list):
     if len(list) == 0: 
         return False
     for i in list:
-        if item.place_name == i.place_name and item.country_code == i.country_code:
+        if item.country_code == i.country_code and item.place_name == i.place_name and item.postal_code == i.postal_code:
             return True
     return False
 
@@ -94,17 +94,18 @@ def getCodes(codigo):
     result = infoapi(resultado)
     
     table_list = []
+    table_listD = []
     
     for i in result:
         if codigo != i.get("postalCode"):
-            continue
-        
-        if not checkItemInList(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode")), table_list):
-            table_list.append(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode")))
+            table_listD.append(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode"), i.get("postalCode")))
+        else: 
+            table_list.append(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode"), i.get("postalCode")))
+           
 
     #Dirigir a X pagina segun el codigo postal, si este es valido o no   
-    if result != '' and len(table_list) != 0: 
-        return render_template("result.html", codigos=formatos_validos, resultado = table_list, code = codigo)
+    if result != '' and (len(table_list) != 0 or len(table_listD) != 0): 
+        return render_template("result.html", codigos=formatos_validos, resultado = table_list,  resultados = table_listD, code = codigo)
     else:
         return render_template('error.html', codigo = codigo)
 
