@@ -33,9 +33,11 @@ class AnalizadorLexico:
             if re.match(self.letras,i):
                 tokens.append({f'{i}':'letra'})
             elif re.match(self.numeros,i):
-                tokens.append({f'{i}':'numero'})
+                tokens.append({f'{i}':'número'})
             elif re.match(self.espacio,i):
                 tokens.append({f'{i}':'espacio'})
+            elif re.match(self.guion,i):
+                tokens.append({f'{i}':'guion'})
             else:
                 tokens.append({f'{i}':'invalido'})
         return tokens
@@ -55,7 +57,7 @@ class AnalizadorLexico:
             if re.match(self.letras,i):
                 tokens.append({"letra": True})
             elif re.match(self.numeros,i):
-                tokens.append({"numero":True})
+                tokens.append({"número":True})
             elif re.match(self.guion,i):
                 tokens.append({"guion":True})
             elif re.match(self.espacio,i):

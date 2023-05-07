@@ -29,7 +29,7 @@ def checkCondition(code: Expresion_Data, data, codigo):
         return False
     
     for i in data:
-        if i == "numero":
+        if i == "número":
             if code.numeros:
                 return True
         if i == "letra":
@@ -80,7 +80,7 @@ def getCodes(codigo):
     #Codigo sin carcateres
     print('___codigo sin carcteres epseciales___\n')
     resultado = objeto.codigoSinCarcateres(codigo)
-    codigo = resultado
+    #codigo = resultado
     
     
     
@@ -90,14 +90,6 @@ def getCodes(codigo):
     print(analisisLexico)
     
     formatos_validos = validateExpresion(analisisLexico, codigo)
-   
-    
-     #consumo de la api
-    print('___CONSUMO API___\n')
-    print(infoapi(resultado))
-    
-        
-    
     
     result = infoapi(resultado)
     
@@ -110,9 +102,7 @@ def getCodes(codigo):
         if not checkItemInList(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode")), table_list):
             table_list.append(Code(i.get("placeName"), i.get("adminCode1"), i.get("adminCode2"), i.get("adminName1"), i.get("adminName2"), i.get("ISO3166-2"), i.get("countryCode")))
 
-    #Dirigir a X pagina segun el codigo postal, si este es valido o no
-    print(len(table_list))
-    
+    #Dirigir a X pagina segun el codigo postal, si este es valido o no   
     if result != '' and len(table_list) != 0: 
         return render_template("result.html", codigos=formatos_validos, resultado = table_list, code = codigo)
     else:
@@ -123,6 +113,7 @@ def get_data_json(country):
         if i.code == country:
             return i
 
+#analisis estructural
 def getDescription(codigo, place, country):
     data = infoapiExtraParameters(codigo, place, country)
     
@@ -135,41 +126,45 @@ def getDescription(codigo, place, country):
     contEspacios = 0
     contGuiones = 0
     for i in analisisLexico:
-        if(list(i.values()) == ['numero']):
+        if(list(i.values()) == ['número']):
             if(contador == 0):
-                estructura += 'El primer digito es un número,'
+                estructura += 'El primer dígito es un número,'
             else:
                 contNumeros +=  1
                 if(contLetras != 0):
                     estructura += ' seguido de '+ str(contLetras) +' letras,'
                     contLetras = 0
+                    if(contador == len(analisisLexico)-1):
+                        estructura += ' terminado en ' + str(contNumeros) +' números.'
                 elif(contador == len(analisisLexico)-1):
                     estructura += ' terminado en ' + str(contNumeros) +' números.'
                 elif(contEspacios !=0):
-                    estructura += ' seguido de '+ str(contEspacios) +' espacios,'
+                    estructura += ' seguido de '+ str(contEspacios) +' espacio,'
                     contEspacios = 0
                 elif(contGuiones !=0):
-                    estructura += ' seguido de '+ str(contGuiones) +' guiones,'
+                    estructura += ' seguido de '+ str(contGuiones) +' guion,'
                     contGuiones = 0
         elif(list(i.values()) == ['letra']):
             if(contador == 0):
-                estructura += 'El primer digito es una letra,'
+                estructura += 'El primer dígito es una letra,'
             else:
                 contLetras += 1
                 if(contNumeros != 0):     
                     estructura += ' seguido de '+ str(contNumeros) +' números,'
                     contNumeros = 0
+                    if(contador == len(analisisLexico)-1):
+                         estructura += ' terminado en '+ str(contLetras) +' letras.'
                 elif(contador == len(analisisLexico)-1):
                     estructura += ' terminado en '+ str(contLetras) +' letras.'
                 elif(contEspacios !=0):
-                    estructura += ' seguido de '+ str(contEspacios) +' espacios,'
+                    estructura += ' seguido de '+ str(contEspacios) +' espacio,'
                     contEspacios = 0
                 elif(contGuiones !=0):
-                    estructura += ' seguido de '+ str(contGuiones) +' guiones,'
+                    estructura += ' seguido de '+ str(contGuiones) +' guion,'
                     contGuiones = 0
         elif(list(i.values()) == ['guion']):
             if(contador == 0):
-                estructura += 'El primer digito es un guion,'
+                estructura += 'El primer dígito es un guion,'
             else:
                 contGuiones += 1
                 if(contLetras != 0):
@@ -178,7 +173,7 @@ def getDescription(codigo, place, country):
                 elif(contador == len(analisisLexico)-1):
                     estructura += ' terminado en '+ str(contGuiones) +' guion'
                 elif(contEspacios !=0):
-                    estructura += ' seguido de '+ str(contEspacios) +' espacios,'
+                    estructura += ' seguido de '+ str(contEspacios) +' espacio,'
                     contEspacios = 0
                 elif(contNumeros !=0):
                     estructura += ' seguido de '+ str(contNumeros) +' números,'
@@ -186,7 +181,7 @@ def getDescription(codigo, place, country):
                
         elif(list(i.values()) == ['espacio']):
             if(contador == 0):
-                estructura += 'El primer digito es un espacio,'
+                estructura += 'El primer dígito es un espacio,'
             else:
                 contEspacios += 1
                 if(contLetras != 0):
@@ -195,7 +190,7 @@ def getDescription(codigo, place, country):
                 elif(contador == len(analisisLexico)-1):
                     estructura += ' terminado en '+ str(contEspacios) +' espacio'
                 elif(contGuiones !=0):
-                    estructura += ' seguido de '+ str(contGuiones) +' guiones,'
+                    estructura += ' seguido de '+ str(contGuiones) +' guion,'
                     contGuiones = 0
                 elif(contNumeros !=0):
                     estructura += ' seguido de '+ str(contNumeros) +' números,'
@@ -225,6 +220,7 @@ def infoapi(codigo):
     url = f'http://api.geonames.org/postalCodeSearchJSON?postalcode={codigo}&username=sebastiancorrea13'
     respuesta = urlopen(url)
     data = json.loads(respuesta.read())
+    print(data)
     dataa = data["postalCodes"]
     if(len(dataa) >= 1):
         return dataa
