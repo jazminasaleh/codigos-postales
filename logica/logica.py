@@ -18,7 +18,7 @@ for i in jsonData["data"]:
 # Closing file
 f.close()
 
-
+#Poder ver si el codigo postal tiene numeros, letras, guiones o espacios
 def checkCondition(code: Expresion_Data, data, codigo):
     coincidences = 0
     for i in code.caracteres:
@@ -43,7 +43,7 @@ def checkCondition(code: Expresion_Data, data, codigo):
                 return True
     return False
 
-    
+#Ya teniendo el token, ahora se valida la expresion regular y los resultados se guardan en una lista    
 def validateExpresion(analisisLexico, codigo):
     temp_caracteres = []
     
@@ -65,29 +65,25 @@ def validateExpresion(analisisLexico, codigo):
     
     return formatos_validos
 
-
+#Se mira si en la lista ya se encuentra ese codigo almacenado
 def checkItemInList(item: Code, list):
     if len(list) == 0: 
         return False
     for i in list:
-        if item.country_code == i.country_code and item.place_name == i.place_name and item.postal_code == i.postal_code:
+        if item.country_code == i.country_code and item.place_name == i.place_name:
             return True
     return False
 
 #depenidndo del codigo se dirge a X pantalla
+#Si el coidgo es igual se almacena en una lista, de lo contrario en otra lista.
 def getCodes(codigo):
     
     #Codigo sin carcateres
-    print('___codigo sin carcteres epseciales___\n')
     resultado = objeto.codigoSinCarcateres(codigo)
-    #codigo = resultado
+    codigo = resultado
     
-    
-    
-     #analizador lexico
-    print('Analizador lexico\n')
+    #analizador lexico
     analisisLexico = objeto.analisisLexico(codigo)
-    print(analisisLexico)
     
     formatos_validos = validateExpresion(analisisLexico, codigo)
     
@@ -227,7 +223,7 @@ def infoapi(codigo):
         return dataa
     return ''
 
-
+#consumir la api, pero teniendo en cuenta parametros como el codigo, pais y abreviatrura
 def infoapiExtraParameters(codigo, place, country):
     codigo = codigo.strip().replace(" ", "%20")
     place = place.strip().replace(" ", "%20")

@@ -42,7 +42,7 @@ class AnalizadorLexico:
                 tokens.append({f'{i}':'invalido'})
         return tokens
     
-    
+    #Poder ver si un codigo postal tiene letras, numeros, guiones o espacios.
     def analisisLexico(self, codigoPostal):
         er = r"(^[a-zA-Z0-9-\s]+$)"
         filtrar = []
