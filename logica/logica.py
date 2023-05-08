@@ -1,16 +1,16 @@
 from flask import redirect, render_template
 from urllib.request import urlopen
-from urllib.parse import quote  
 import json, re
 from logica.analizador_lexico import AnalizadorLexico
 from model.code import Code
 from model.expresionData import Expresion_Data
 
+#Obtiene la informacion del JSON
 f = open("./static/data/datos.json", mode="r", encoding="utf-8")
 jsonData = json.load(f)
 
+#La infomrcaion del json se almacena en postalCode
 postalCodes = []
-
 objeto = AnalizadorLexico();
 for i in jsonData["data"]:
     postalCodes.append(Expresion_Data(i["abreviatura"],i["pais"],i["expresionRegular"],i["numeros"], i["letras"], i["guiones"], i["espacios"], i["numeroCaracteres"], i["analisisSemantico"], i["usar"]))
@@ -110,7 +110,7 @@ def get_data_json(country):
         if i.code == country:
             return i
 
-#analisis estructural
+#analisis estructural y me dirige a la pagina del analisis del codigo postal
 def getDescription(codigo, place, country):
     data = infoapiExtraParameters(codigo, place, country)
     
@@ -217,7 +217,6 @@ def infoapi(codigo):
     url = f'http://api.geonames.org/postalCodeSearchJSON?postalcode={codigo}&username=sebastiancorrea13'
     respuesta = urlopen(url)
     data = json.loads(respuesta.read())
-    print(data)
     dataa = data["postalCodes"]
     if(len(dataa) >= 1):
         return dataa
@@ -230,7 +229,6 @@ def infoapiExtraParameters(codigo, place, country):
     country = country.strip().replace(" ", "%20")
     url = f'http://api.geonames.org/postalCodeSearchJSON?postalcode={codigo}&countrycode={country}&placename={place}&username=sebastiancorrea13'
     
-    print(url)
     respuesta = urlopen(url)
     data = json.loads(respuesta.read())
     dataa = data["postalCodes"]

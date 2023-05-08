@@ -11,7 +11,6 @@ def home():
 @app.route('/codigopostal', methods=["POST"])
 def codigopostal():
     codigo = request.form['codigo']
-    #REVISAR
     return getCodes(codigo)
 
 @app.route('/descripcion', methods=["GET"])

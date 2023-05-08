@@ -10,7 +10,7 @@ class AnalizadorLexico:
     
     #coidgo sin carcateres invalidos
     def codigoSinCarcateres(self, codigoPostal):
-        er = r"^[a-zA-Z0-9-\s]+$"
+        er = r"^[A-Z0-9-\s]+$"
         cadena = ''
         for i in range(len(codigoPostal)):
             if re.findall(er, codigoPostal[i]):
